@@ -1,22 +1,21 @@
 # Readme
-This is a simple template to kickstart new Kotlin-based cli projects.
 
-It uses Clikt 4.2.1 and Kotlin 1.9.20, and produces a JVM-based cli.
+The Bitcoin Cruncher 2000 is a simple command line application that combines 4 libraries written to better understand the structures that together make bitcoin work.
 
-Build for testing and run using
+The goal of the application is to put into production 4 hobby libraries that parse and validate the following:
+- bitcoin transactions
+- bitcoin blocks
+- bitcoin scripts
+- bitcoin partially signed bitcoin transactions (PSBT)
+
+Those libraries are not released on Maven Central, and so to build this application you will need to build them yourself and publish them to your local Maven repository.
+
+## Usage
+
+Build and run using
+
 ```shell
-./gradlew installDist
-./build/install/templatecliapp/bin/templatecliapp
-```
-
-Build and install to custom location using
-```shell
-./gradlew distTar
-cd build/distributions
-tar --extract --verbose --file templatecliapp-0.1.0-SNAPSHOT.tar -C ~/targetdirectory/
-```
-
-From there you can run the application using 
-```shell
-~/targetdirectory/templatecliapp-0.1.0-SNAPSHOT/bin/templatecliapp
+just install
+cd ./app/build/install/cruncher/bin/
+./cruncher --help
 ```
