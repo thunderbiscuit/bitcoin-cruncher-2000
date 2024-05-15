@@ -16,7 +16,8 @@ dependencies {
     implementation("com.github.ajalt.mordant:mordant:2.2.0")
 
     // Bitcoin libraries
-    implementation("me.tb:bitcoin-tx-parser:0.1.0-SNAPSHOT")
+    implementation("me.tb:bitcoin-tx-parser:0.1.1-SNAPSHOT")
+    implementation("me.tb:bitcoin-block-parser:0.1.0-SNAPSHOT")
 }
 
 kotlin {
