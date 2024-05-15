@@ -19,9 +19,8 @@ class Tx : CliktCommand(help = "Parse a transaction") {
 
     override fun run() {
         val rawTx = hex.hexToUByteArray()
-        val tx: Tx = Tx.fromRawTx(rawTx)
+        val tx: Tx = Tx.fromBytes(rawTx)
         val locktime: String = when (tx.locktime) {
-            null               -> "None"
             is Locktime.Blocks -> "Block-based timelock: ${(tx.locktime as Locktime.Blocks).height}"
             is Locktime.Time   -> "Time-based timelock: ${(tx.locktime as Locktime.Time).timestamp}"
         }
@@ -49,12 +48,27 @@ class Tx : CliktCommand(help = "Parse a transaction") {
                 body {
                     row("Version", tx.version.value.toString()) { cellBorders = Borders.ALL }
                     row("SegWit", tx.segWit.toString()) { cellBorders = Borders.ALL }
-                    row("Inputs", tx.inputs.size.toString()) { cellBorders = Borders.ALL }
-                    row("Outputs", tx.outputs.size.toString()) { cellBorders = Borders.ALL }
+                    row("Num Inputs", tx.inputs.size.toString()) { cellBorders = Borders.ALL }
+                    tx.inputs.forEachIndexed { index, input ->
+                        row("Input $index", "") { cellBorders = Borders.ALL }
+                        row("  Outpoint", "${input.outPoint.txid}:${input.outPoint.vout}") { cellBorders = Borders.ALL }
+                        row("  ScriptSig", input.scriptSig.bytes.toHexString().breakAt(88)) { cellBorders = Borders.ALL }
+                        row("  Sequence", input.sequence.bytes.toHexString()) { cellBorders = Borders.ALL }
+                    }
+                    row("Num Outputs", tx.outputs.size.toString()) { cellBorders = Borders.ALL }
+                    tx.outputs.forEachIndexed { index, output ->
+                        row("Output $index", "") { cellBorders = Borders.ALL }
+                        row("  Amount", output.outputAmount.value.toString()) { cellBorders = Borders.ALL }
+                        row("  ScriptPubKey", output.scriptPubKey.bytes.toHexString().breakAt(88)) { cellBorders = Borders.ALL }
+                    }
                     row("Locktime", locktime) { cellBorders = Borders.ALL }
                 }
             }
         )
         echo()
     }
+}
+
+fun String.breakAt(length: Int): String {
+    return this.chunked(length).joinToString("\n")
 }
